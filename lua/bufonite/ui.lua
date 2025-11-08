@@ -3,7 +3,7 @@ local popup = require('plenary.popup')
 local M = {}
 
 function M.create_window()
-  local width = 70
+  local width = 68
   local height = 20
 
   local win_config = {
@@ -20,6 +20,7 @@ function M.create_window()
 
   vim.api.nvim_set_option_value('filetype', 'bufonite', { buf = bufnr })
   vim.api.nvim_set_option_value('bufhidden', 'delete', { buf = bufnr })
+  vim.api.nvim_set_option_value('buftype', 'acwrite', { buf = bufnr })
 
   return {
     bufnr = bufnr,
