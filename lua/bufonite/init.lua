@@ -29,14 +29,14 @@ function M.setup()
 end
 
 function M.switch_to_alt()
-  local bufonite_alt_buffer = buffer_mru:get_second_most_recent()
+  local bufonite_alt_buffer = buffer_mru:at(2)
 
   if bufonite_alt_buffer ~= nil then
     vim.api.nvim_set_current_buf(bufonite_alt_buffer)
   end
 end
 
-function M.get_alt_buffernr() return buffer_mru:get_second_most_recent() end
+function M.get_alt_buffernr() return buffer_mru:at(2) end
 
 function M.show_buffers()
   local current_bufnr = vim.api.nvim_get_current_buf()
