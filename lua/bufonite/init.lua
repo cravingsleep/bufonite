@@ -26,10 +26,6 @@ function M.setup()
     group = group,
     callback = function(args) buffer_mru:delete(args.buf) end,
   })
-
-  vim.api.nvim_create_user_command('BufoniteSwitchToAlt', function() M.switch_to_alt() end, {
-    nargs = 0,
-  })
 end
 
 function M.switch_to_alt()
