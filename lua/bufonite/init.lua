@@ -4,24 +4,56 @@ local buffers = require('bufonite.buffers')
 local sneak = require('bufonite.sneak')
 local keymaps = require('bufonite.keymaps')
 local printer = require('bufonite.content')
+local MRU = require('bufonite.mru')
 
 local M = {}
+
+local buffer_mru = MRU:new()
 
 function M.setup()
   local group = vim.api.nvim_create_augroup('BufoniteAutoCmds', { clear = true })
 
-  vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
+  vim.api.nvim_create_autocmd({ 'BufEnter' }, {
     group = group,
-    callback = function(args) end,
+    callback = function(args)
+      if vim.api.nvim_buf_is_loaded(args.buf) and vim.bo[args.buf].buflisted then
+        buffer_mru:add(args.buf)
+      end
+    end,
+  })
+
+  vim.api.nvim_create_autocmd({ 'BufDelete', 'BufWipeout' }, {
+    group = group,
+    callback = function(args) buffer_mru:delete(args.buf) end,
+  })
+
+  vim.api.nvim_create_user_command('BufoniteSwitchToAlt', function() M.switch_to_alt() end, {
+    nargs = 0,
   })
 end
 
+function M.switch_to_alt()
+  local bufonite_alt_buffer = buffer_mru:get_second_most_recent()
+
+  if bufonite_alt_buffer ~= nil then
+    vim.api.nvim_set_current_buf(bufonite_alt_buffer)
+  end
+end
+
+function M.get_alt_buffernr() return buffer_mru:get_second_most_recent() end
+
 function M.show_buffers()
+  local current_bufnr = vim.api.nvim_get_current_buf()
+  local selectable_bufnrs = array.filter(buffer_mru:toarray(), function(bufnr) return bufnr ~= current_bufnr end)
+  if #selectable_bufnrs == 0 then
+    vim.notify('Bufonite: no buffers to show...')
+    return
+  end
+
   local win_info = ui.create_window()
   local win_id = win_info.win_id
   local window_bufnr = win_info.bufnr
 
-  local selectable_bufnrs = buffers.get_selectable_buffernrs()
   local buffer_infos = array.map(selectable_bufnrs, function(bufnr) return buffers.get_buffer_info(bufnr) end)
 
   local paired = array.zip(buffer_infos, 2)
