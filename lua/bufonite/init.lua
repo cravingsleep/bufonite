@@ -7,7 +7,14 @@ local printer = require('bufonite.content')
 
 local M = {}
 
-function M.setup() end
+function M.setup()
+  local group = vim.api.nvim_create_augroup('BufoniteAutoCmds', { clear = true })
+
+  vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
+    group = group,
+    callback = function(args) print(tostring(args.buf)) end,
+  })
+end
 
 function M.show_buffers()
   local win_info = ui.create_window()

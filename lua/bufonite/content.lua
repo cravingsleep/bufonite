@@ -31,7 +31,6 @@ local function get_middle(filename)
   return '│' .. center_text(filename_truncated, box_width - 2) .. '│'
 end
 
--- borderchars = { '─', '│', '─', '│', '╭', '╮', '╯', '╰' },
 function M.add_file_boxes(contents, sneak_key_left, filename_left, sneak_key_right, filename_right)
   if filename_right ~= nil then
     table.insert(
