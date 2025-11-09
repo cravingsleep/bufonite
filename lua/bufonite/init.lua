@@ -11,6 +11,12 @@ local M = {}
 local buffer_mru = MRU:new()
 
 function M.setup()
+  -- get the list of initial buffers (i.e. from cmd line) and load them in to our mru
+  -- add them in reverse since the first file in the cmd line will be the open one which
+  -- will be the most recent
+  local initial_buffers = vim.api.nvim_list_bufs()
+  array.reverse_for_each(initial_buffers, function(bufnr) buffer_mru:add(bufnr) end)
+
   local group = vim.api.nvim_create_augroup('BufoniteAutoCmds', { clear = true })
 
   vim.api.nvim_create_autocmd({ 'BufEnter' }, {
