@@ -12,7 +12,7 @@ function M.setup()
 
   vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
     group = group,
-    callback = function(args) print(tostring(args.buf)) end,
+    callback = function(args) end,
   })
 end
 
