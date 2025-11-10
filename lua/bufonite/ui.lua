@@ -2,6 +2,8 @@ local popup = require('plenary.popup')
 
 local M = {}
 
+---Creates a floating window
+---@return {bufnr:number, win_id:number}
 function M.create_window()
   local width = 68
   local height = 20
