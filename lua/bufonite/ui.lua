@@ -3,7 +3,7 @@ local popup = require('plenary.popup')
 local M = {}
 
 ---Creates a floating window
----@return {bufnr:number, win_id:number}
+---@return {bufnr:number, win_id:number, lock_content: function}
 function M.create_window()
   local width = 68
   local height = 20
@@ -27,6 +27,7 @@ function M.create_window()
   return {
     bufnr = bufnr,
     win_id = win_id,
+    lock_content = function() vim.api.nvim_set_option_value('modifiable', false, { buf = bufnr }) end,
   }
 end
 

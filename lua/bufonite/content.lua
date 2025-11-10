@@ -3,6 +3,10 @@ local M = {}
 local box_width = 27
 local box_separation = 10
 
+---Erases chars from a string from the front if it exceeds a max length
+---@param str string
+---@param max_len number
+---@return string
 local function truncate_from_start(str, max_len)
   if #str <= max_len then
     return str
@@ -11,26 +15,44 @@ local function truncate_from_start(str, max_len)
   end
 end
 
+---Gets the top border of a box
+---@param sneak_key string
+---@return string
 local function get_top_border(sneak_key)
   local halfway = math.floor(box_width / 2)
 
   return '╭' .. string.rep('─', halfway - 1) .. ' ' .. sneak_key .. ' ' .. string.rep('─', halfway - 1) .. '╮'
 end
 
+---Gets the bottom border of a box
+---@return string
 local function get_bottom_border() return '╰' .. string.rep('─', box_width) .. '╯' end
 
+---Centers text by padding the sides with empty strings
+---@param text string
+---@param width number
+---@return string
 local function center_text(text, width)
   local pad = math.floor((width - #text) / 2)
 
   return string.rep(' ', pad) .. text .. string.rep(' ', width - pad - #text + 2)
 end
 
+---Get the middle of the box with the filename inside
+---@param filename string
+---@return string
 local function get_middle(filename)
   local filename_truncated = truncate_from_start(filename, box_width - 2)
 
   return '│' .. center_text(filename_truncated, box_width - 2) .. '│'
 end
 
+---Add two side by side file boxes to the content array
+---@param contents string[]
+---@param sneak_key_left string
+---@param filename_left string
+---@param sneak_key_right string
+---@param filename_right string
 function M.add_file_boxes(contents, sneak_key_left, filename_left, sneak_key_right, filename_right)
   if filename_right ~= nil then
     table.insert(
