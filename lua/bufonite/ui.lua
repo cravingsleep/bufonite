@@ -3,11 +3,10 @@ local popup = require('plenary.popup')
 local M = {}
 
 ---Creates a floating window
+---@param width number
+---@param height number
 ---@return {bufnr:number, win_id:number, lock_content: function}
-function M.create_window()
-  local width = 68
-  local height = 20
-
+function M.create_window(width, height)
   local win_config = {
     title = 'Bufonite',
     line = math.floor(((vim.o.lines - height) / 2) - 1),
