@@ -1,23 +1,26 @@
---- A Most Recently Used list where the item that has been added the most
---- recently will be in the first position. It uses a doubly linked list
---- and hashmap in order to provide O(1) addition and deletion.
+---A Most Recently Used list where the item that has been added the most
+---recently will be in the first position. It uses a doubly linked list
+---and hashmap in order to provide O(1) addition and deletion.
+
+---@class MRU.Node
+---@field next MRU.Node|nil the next node in the list
+---@field prev MRU.Node|nil the previous node in the list
+---@field value any|nil the value stored in the node
+
+---@class MRU
+---@field head MRU.Node
+---@field tail MRU.Node
+---@field node_cache table<any, MRU.Node>
 local MRU = {}
 MRU.__index = MRU
 
---- creates an empty list
----@class MRU
----@field add fun(self:MRU, value:any)
----@field delete fun(self:MRU, value:any)
----@field toarray fun(self:MRU):table
----@field at fun(self:MRU, index:number):any|nil
+---creates an empty list
 ---@return MRU
-function MRU:new()
-  local obj = {}
-  setmetatable(obj, self)
+function MRU.new()
+  local self = setmetatable({}, { __index = MRU })
 
   -- it is a lot easier to keep a constant head and tail
   -- when it comes to the methods so store them here
-  -- the type of a node is { value: number|nil, prev: Node|nil, next: Node|nil }
   self.head = {}
   self.tail = {}
 
@@ -28,11 +31,11 @@ function MRU:new()
   -- this stores value->Node so we can find where in the list a value is in O(1)
   self.node_cache = {}
 
-  return obj
+  return self
 end
 
---- moves the node into the head position of the list
----@param node table
+---moves the node into the head position of the list
+---@param node MRU.Node
 function MRU:_put_into_head(node)
   node.prev = self.head
   self.head.next.prev = node
@@ -42,16 +45,16 @@ function MRU:_put_into_head(node)
   self.node_cache[node.value] = node
 end
 
---- detaches the node from the list and connects the space left back together
----@param node table
+---detaches the node from the list and connects the space left back together
+---@param node MRU.Node
 function MRU:_detach_node(node)
   node.prev.next = node.next
   node.next.prev = node.prev
   self.node_cache[node.value] = nil
 end
 
---- add a value to the list, making it the most recently used
---- if the item already exists it moves to the first position
+---add a value to the list, making it the most recently used
+---if the item already exists it moves to the first position
 ---@param value any
 function MRU:add(value)
   local cached_node = self.node_cache[value]
@@ -66,7 +69,7 @@ function MRU:add(value)
   end
 end
 
---- delete the value from the list completely
+---delete the value from the list completely
 ---@param value any
 function MRU:delete(value)
   local cached_node = self.node_cache[value]
@@ -76,8 +79,8 @@ function MRU:delete(value)
   end
 end
 
---- converts the linked list into an array
----@return table the array of values
+---converts the linked list into an array
+---@return any[]
 function MRU:toarray()
   local arr = {}
 
@@ -91,9 +94,9 @@ function MRU:toarray()
   return arr
 end
 
---- gets the item at the nth index, lua style so 1 is the most recently used
---- @param index number
---- @return any|nil the result or nil if not found
+---gets the item at the nth index, lua style so 1 is the most recently used
+---@param index number
+---@return any|nil the result or nil if not found
 function MRU:at(index)
   local node = self.head
 
@@ -107,6 +110,9 @@ function MRU:at(index)
 
   return node.value
 end
+
+---@return integer
+function MRU:length() return #self.node_cache end
 
 -- function MRU:debug_print()
 --   local content = {}

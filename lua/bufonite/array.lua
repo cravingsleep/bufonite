@@ -1,9 +1,10 @@
 local M = {}
 
 ---Map the values using a supplied function
----@param array table
----@param fn function called for each value to get the next value
----@return table
+---@generic T, K
+---@param array T[]
+---@param fn fun(item: T, index: number): K called for each value to get the next value
+---@return K[]
 function M.map(array, fn)
   local arr = {}
 
@@ -15,8 +16,9 @@ function M.map(array, fn)
 end
 
 ---Run a function for each value in the array
----@param array table
----@param fn function
+---@generic T
+---@param array T[]
+---@param fn fun(item: T, index: number): nil
 function M.for_each(array, fn)
   for i, n in ipairs(array) do
     fn(n, i)
@@ -24,8 +26,9 @@ function M.for_each(array, fn)
 end
 
 ---Run a function for each value in the array in reverse order
----@param array table
----@param fn function
+---@generic T
+---@param array T[]
+---@param fn fun(item: T, index: number): nil
 function M.reverse_for_each(array, fn)
   for i = #array, 1, -1 do
     fn(array[i], i)
@@ -33,9 +36,10 @@ function M.reverse_for_each(array, fn)
 end
 
 ---Filter the values using a supplied function
----@param array table
----@param fn function
----@return table
+---@generic T
+---@param array T[]
+---@param fn fun(item: T): boolean
+---@return T[]
 function M.filter(array, fn)
   local arr = {}
 
@@ -49,9 +53,10 @@ function M.filter(array, fn)
 end
 
 ---Group together sequential values to a limit of #n
----@param array table
+---@generic T
+---@param array T[]
 ---@param n number
----@return table
+---@return T[][]
 function M.zip(array, n)
   local arr = {}
 
