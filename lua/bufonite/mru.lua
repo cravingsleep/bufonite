@@ -11,6 +11,7 @@
 ---@field head MRU.Node
 ---@field tail MRU.Node
 ---@field node_cache table<any, MRU.Node>
+---@field length number
 local MRU = {}
 MRU.__index = MRU
 
@@ -30,6 +31,9 @@ function MRU.new()
 
   -- this stores value->Node so we can find where in the list a value is in O(1)
   self.node_cache = {}
+  -- lua does not have a reliable way to get the length of a table so keep track of it here
+  -- it should always be the amount of entries in `node_cache`
+  self.length = 0
 
   return self
 end
@@ -43,6 +47,7 @@ function MRU:_put_into_head(node)
   self.head.next = node
 
   self.node_cache[node.value] = node
+  self.length = self.length + 1
 end
 
 ---detaches the node from the list and connects the space left back together
@@ -51,6 +56,7 @@ function MRU:_detach_node(node)
   node.prev.next = node.next
   node.next.prev = node.prev
   self.node_cache[node.value] = nil
+  self.length = self.length - 1
 end
 
 ---add a value to the list, making it the most recently used
@@ -110,9 +116,6 @@ function MRU:at(index)
 
   return node.value
 end
-
----@return integer
-function MRU:length() return #self.node_cache end
 
 -- function MRU:debug_print()
 --   local content = {}

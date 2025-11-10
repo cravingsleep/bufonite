@@ -28,6 +28,7 @@ function M.setup(opts)
 
   local group = vim.api.nvim_create_augroup('BufoniteAutoCmds', { clear = true })
 
+  -- set up the listener for opening buffers and add them to the mru
   vim.api.nvim_create_autocmd({ 'BufEnter' }, {
     group = group,
     callback = function(args)
@@ -37,12 +38,14 @@ function M.setup(opts)
     end,
   })
 
+  -- set up the listener for closing buffers and delete them from the mru
   vim.api.nvim_create_autocmd({ 'BufDelete', 'BufWipeout' }, {
     group = group,
     callback = function(args) buffer_mru:delete(args.buf) end,
   })
 end
 
+---Switches to the Bufonite alternate buffer
 function M.switch_to_alt()
   local bufonite_alt_buffer = buffer_mru:at(2)
 
@@ -51,10 +54,15 @@ function M.switch_to_alt()
   end
 end
 
+---Gets the buffer number for the Bufonite alternate buffer
+---@return number
 function M.get_alt_buffernr() return buffer_mru:at(2) end
 
-function M.get_buffer_count() return buffer_mru:length() end
+---Gets the amount of buffers currently open
+---@return number
+function M.get_buffer_count() return buffer_mru.length end
 
+---Show the Bufonite buffer selector
 function M.show_buffers()
   local current_bufnr = vim.api.nvim_get_current_buf()
   local selectable_bufnrs = array.filter(buffer_mru:toarray(), function(bufnr) return bufnr ~= current_bufnr end)

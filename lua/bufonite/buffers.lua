@@ -1,5 +1,8 @@
 local M = {}
 
+---Gets some info about the buffers
+---@param bufnr number
+---@return {bufnr:number, last_folder:string, filename:string}
 function M.get_buffer_info(bufnr)
   local current_path = vim.api.nvim_buf_get_name(bufnr)
   local last_folder = vim.fn.fnamemodify(current_path, ':h:t')
