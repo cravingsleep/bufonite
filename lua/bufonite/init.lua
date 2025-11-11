@@ -9,7 +9,6 @@ local MRU = require('bufonite.mru')
 
 local M = {}
 
----@type MRU
 local buffer_mru = MRU:new()
 
 ---@param opts? Bufonite.Opts
