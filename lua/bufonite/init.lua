@@ -5,6 +5,7 @@ local buffers = require('bufonite.buffers')
 local sneak = require('bufonite.sneak')
 local keymaps = require('bufonite.keymaps')
 local printer = require('bufonite.content')
+local highlight = require('bufonite.highlight')
 local MRU = require('bufonite.mru')
 
 local M = {}
@@ -97,6 +98,7 @@ function M.show_buffers()
   end)
 
   vim.api.nvim_buf_set_lines(window_bufnr, 0, #content, false, content)
+  highlight.highlight_sneak_keys(window_bufnr, buffer_mru.length, M.config.width)
   win_info.lock_content()
 
   keymaps.add_close_keymap(win_id, window_bufnr)
