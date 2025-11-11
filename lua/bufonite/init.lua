@@ -77,7 +77,8 @@ function M.show_buffers()
   local buffer_infos = array.map(selectable_bufnrs, function(bufnr) return buffers.get_buffer_info(bufnr) end)
 
   local paired = array.zip(buffer_infos, 2)
-  local content = {}
+  -- put a empty line first so the cursor is not on the first box which looks jarring
+  local content = { '' }
 
   array.for_each(paired, function(pair, i)
     keymaps.add_sneak_keymap(win_id, window_bufnr, pair[1].bufnr, sneak.get_left_sneak_key(i))

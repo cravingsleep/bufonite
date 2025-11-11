@@ -12,40 +12,21 @@ local function truncate_from_start(str, max_len)
   end
 end
 
----Gets the top border of a box
----@param box_width number
+-- { "─", "│", "─", "│", "╭", "╮", "╯", "╰" }
+local top_border = '╭─╮'
+-- be careful because the byte length of the borders is 9
+local top_border_length = 3
+local bottom_border = '╰─╯'
+local bottom_border_length = 3
+
 ---@param sneak_key string
 ---@return string
-local function get_top_border(box_width, sneak_key)
-  local halfway = math.floor(box_width / 2)
+local function get_middle(sneak_key) return '│' .. sneak_key .. '│' end
 
-  return '╭' .. string.rep('─', halfway - 2) .. ' ' .. sneak_key .. ' ' .. string.rep('─', halfway - 2) .. '╮'
-end
-
----Gets the bottom border of a box
----@param box_width number
+---Gives n spaces
+---@param n number
 ---@return string
-local function get_bottom_border(box_width) return '╰' .. string.rep('─', box_width - 2) .. '╯' end
-
----Centers text by padding the sides with empty strings
----@param text string
----@param width number
----@return string
-local function center_text(text, width)
-  local pad = math.floor((width - #text) / 2)
-
-  return string.rep(' ', pad) .. text .. string.rep(' ', width - pad - #text)
-end
-
----Get the middle of the box with the filename inside
----@param box_width number
----@param filename string
----@return string
-local function get_middle(box_width, filename)
-  local filename_truncated = truncate_from_start(filename, box_width - 2)
-
-  return '│' .. center_text(filename_truncated, box_width - 2) .. '│'
-end
+local function ws(n) return string.rep(' ', n) end
 
 ---Add two side by side file boxes to the content array
 ---@param contents string[]
@@ -55,16 +36,25 @@ end
 ---@param sneak_key_right string
 ---@param filename_right string
 function M.add_file_boxes(contents, window_width, sneak_key_left, filename_left, sneak_key_right, filename_right)
-  local box_width = math.floor(window_width / 2)
-
   if filename_right ~= nil then
-    table.insert(contents, get_top_border(box_width, sneak_key_left) .. get_top_border(box_width, sneak_key_right))
-    table.insert(contents, get_middle(box_width, filename_left) .. get_middle(box_width, filename_right))
-    table.insert(contents, get_bottom_border(box_width) .. get_bottom_border(box_width))
+    local middle_space = window_width - 8
+    local max_filename_length = math.floor(middle_space / 2)
+    local truncated_filename_left = truncate_from_start(filename_left, max_filename_length)
+    local truncated_filename_right = truncate_from_start(filename_right, max_filename_length)
+
+    table.insert(contents, top_border .. ws(window_width - (top_border_length * 2)) .. top_border)
+
+    local left_middle = get_middle(sneak_key_left) .. ' ' .. truncated_filename_left
+    local right_middle = truncated_filename_right .. ' ' .. get_middle(sneak_key_right)
+
+    -- get rid of the 8 extra bytes by the unicode line length
+    table.insert(contents, left_middle .. ws(window_width - (#right_middle + #left_middle - 8)) .. right_middle)
+    table.insert(contents, bottom_border .. ws(window_width - (bottom_border_length * 2)) .. bottom_border)
   else
-    table.insert(contents, get_top_border(box_width, sneak_key_left))
-    table.insert(contents, get_middle(box_width, filename_left))
-    table.insert(contents, get_bottom_border(box_width))
+    local max_space = window_width - 4
+    table.insert(contents, top_border)
+    table.insert(contents, get_middle(sneak_key_left) .. ' ' .. truncate_from_start(filename_left, max_space))
+    table.insert(contents, bottom_border)
   end
 end
 

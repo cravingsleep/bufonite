@@ -4,7 +4,7 @@ local M = {}
 ---@param i number
 ---@return string
 function M.get_left_sneak_key(i)
-  local keys = 'fsagtrewqvcxz'
+  local keys = 'fdsagtrewqvcxz'
 
   return string.sub(keys, i, i)
 end
