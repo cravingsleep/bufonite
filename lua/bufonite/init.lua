@@ -96,7 +96,7 @@ function M.show_buffers()
 
   vim.api.nvim_buf_set_lines(window_bufnr, 0, #content, false, content)
 
-  keymaps.add_close_keymap(win_id, window_bufnr)
+  keymaps.add_close_keymap(win_id, window_bufnr, M.config.keymaps.close)
 end
 
 return M

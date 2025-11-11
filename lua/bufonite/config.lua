@@ -2,11 +2,19 @@ local buffers = require('bufonite.buffers')
 
 local M = {}
 
+---@class Bufonite.KeymapsOpts
+---@field close? string[] keymaps which should close the buffer selection window
+
 ---@class Bufonite.Opts
 ---@field is_buffer_selectable? fun(bufnr: number): boolean should this buffer be added to the list?
+---@field keymaps? Bufonite.KeymapsOpts
+
+---@class Bufonite.Keymaps
+---@field close string[] keymaps which should close the buffer selection window
 
 ---@class Bufonite.Config
 ---@field is_buffer_selectable fun(bufnr: number): boolean should this buffer be added to the list?
+---@field keymaps Bufonite.Keymaps
 
 ---@type Bufonite.Config
 local defaults = {
@@ -17,6 +25,9 @@ local defaults = {
       and vim.api.nvim_buf_get_name(bufnr) ~= ''
       and not buffers.is_terminal_buffer(bufnr)
   end,
+  keymaps = {
+    close = { 'q', '<C-[>', '<esc>' },
+  },
 }
 
 ---@param opts? Bufonite.Opts
