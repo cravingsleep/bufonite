@@ -1,24 +1,28 @@
----A Most Recently Used list where the item that has been added the most
+---A Least Recently Used list where the item that has been added the most
 ---recently will be in the first position. It uses a doubly linked list
 ---and hashmap in order to provide O(1) addition and deletion.
 
----@class MRU.Node
----@field next MRU.Node|nil the next node in the list
----@field prev MRU.Node|nil the previous node in the list
+---@class LRU.Node
+---@field next LRU.Node|nil the next node in the list
+---@field prev LRU.Node|nil the previous node in the list
 ---@field value any|nil the value stored in the node
 
----@class MRU
----@field head MRU.Node
----@field tail MRU.Node
----@field node_cache table<any, MRU.Node>
+---@class LRU
+---@field capacity number
+---@field head LRU.Node
+---@field tail LRU.Node
+---@field node_cache table<any, LRU.Node>
 ---@field length number
-local MRU = {}
-MRU.__index = MRU
+local LRU = {}
+LRU.__index = LRU
 
 ---creates an empty list
----@return MRU
-function MRU.new()
-  local self = setmetatable({}, { __index = MRU })
+---@param capacity number the max items that can be stored in the list
+---@return LRU
+function LRU.new(capacity)
+  local self = setmetatable({}, { __index = LRU })
+
+  self.capacity = capacity
 
   -- it is a lot easier to keep a constant head and tail
   -- when it comes to the methods so store them here
@@ -31,6 +35,7 @@ function MRU.new()
 
   -- this stores value->Node so we can find where in the list a value is in O(1)
   self.node_cache = {}
+
   -- lua does not have a reliable way to get the length of a table so keep track of it here
   -- it should always be the amount of entries in `node_cache`
   self.length = 0
@@ -39,8 +44,8 @@ function MRU.new()
 end
 
 ---moves the node into the head position of the list
----@param node MRU.Node
-function MRU:_put_into_head(node)
+---@param node LRU.Node
+function LRU:_put_into_head(node)
   node.prev = self.head
   self.head.next.prev = node
   node.next = self.head.next
@@ -51,8 +56,8 @@ function MRU:_put_into_head(node)
 end
 
 ---detaches the node from the list and connects the space left back together
----@param node MRU.Node
-function MRU:_detach_node(node)
+---@param node LRU.Node
+function LRU:_detach_node(node)
   node.prev.next = node.next
   node.next.prev = node.prev
   self.node_cache[node.value] = nil
@@ -61,11 +66,17 @@ end
 
 ---add a value to the list, making it the most recently used
 ---if the item already exists it moves to the first position
+---if we are at capacity evict the least recently used (last)
 ---@param value any
-function MRU:add(value)
+function LRU:add(value)
   local cached_node = self.node_cache[value]
 
   if cached_node == nil then
+    -- if we are at capacity then evit the last node
+    if self.length == self.capacity then
+      self:_detach_node(self.tail.prev)
+    end
+
     -- add this as head
     self:_put_into_head({ value = value })
   else
@@ -77,7 +88,7 @@ end
 
 ---delete the value from the list completely
 ---@param value any
-function MRU:delete(value)
+function LRU:delete(value)
   local cached_node = self.node_cache[value]
 
   if cached_node ~= nil then
@@ -87,7 +98,7 @@ end
 
 ---converts the linked list into an array
 ---@return any[]
-function MRU:toarray()
+function LRU:toarray()
   local arr = {}
 
   local node = self.head.next
@@ -103,7 +114,7 @@ end
 ---gets the item at the nth index, lua style so 1 is the most recently used
 ---@param index number
 ---@return any|nil the result or nil if not found
-function MRU:at(index)
+function LRU:at(index)
   local node = self.head
 
   for _ = 1, index do
@@ -117,7 +128,7 @@ function MRU:at(index)
   return node.value
 end
 
--- function MRU:debug_print()
+-- function LRU:debug_print()
 --   local content = {}
 --
 --   local node = self.head
@@ -137,4 +148,4 @@ end
 -- end
 --
 
-return MRU
+return LRU
