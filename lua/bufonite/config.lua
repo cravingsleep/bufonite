@@ -10,6 +10,7 @@ local M = {}
 ---@field width? number
 ---@field height? number
 ---@field keymaps? Bufonite.KeymapsOpts
+---@field capacity? number
 
 ---@class Bufonite.Keymaps
 ---@field close string[] keymaps which should close the buffer selection window
@@ -19,6 +20,7 @@ local M = {}
 ---@field height number
 ---@field is_buffer_selectable fun(bufnr: number): boolean should this buffer be added to the list?
 ---@field keymaps Bufonite.Keymaps
+---@field capacity number
 
 ---@type Bufonite.Config
 local defaults = {
@@ -34,6 +36,7 @@ local defaults = {
   keymaps = {
     close = { 'q', '<C-[>', '<esc>' },
   },
+  capacity = 5,
 }
 
 ---@param opts? Bufonite.Opts

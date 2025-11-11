@@ -9,11 +9,14 @@ local LRU = require('bufonite.lru')
 
 local M = {}
 
-local buffer_lru = LRU:new()
+---@type LRU
+local buffer_lru
 
 ---@param opts? Bufonite.Opts
 function M.setup(opts)
   M.config = config.get_config(opts)
+
+  buffer_lru = LRU.new(M.config.capacity)
 
   -- get the list of initial buffers (i.e. from cmd line) and load them in to our lru
   -- add them in reverse since the first file in the cmd line will be the open one which
