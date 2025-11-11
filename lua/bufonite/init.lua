@@ -9,7 +9,6 @@ local MRU = require('bufonite.mru')
 
 local M = {}
 
----@type MRU
 local buffer_mru = MRU:new()
 
 ---@param opts? Bufonite.Opts
@@ -99,7 +98,7 @@ function M.show_buffers()
   vim.api.nvim_buf_set_lines(window_bufnr, 0, #content, false, content)
   win_info.lock_content()
 
-  keymaps.add_close_keymap(win_id, window_bufnr)
+  keymaps.add_close_keymap(win_id, window_bufnr, M.config.keymaps.close)
 end
 
 return M
