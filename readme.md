@@ -11,3 +11,4 @@ A neovim plugin that simplifies buffer navigation and display.
 - Better looking UI?
 - modes? open and delete?
 - split opening
+- close on esc and Ctrl-[

@@ -71,7 +71,7 @@ function M.show_buffers()
     return
   end
 
-  local win_info = ui.create_window()
+  local win_info = ui.create_window(M.config.width, M.config.height)
   local win_id = win_info.win_id
   local window_bufnr = win_info.bufnr
 
@@ -88,6 +88,7 @@ function M.show_buffers()
 
     printer.add_file_boxes(
       content,
+      M.config.width,
       sneak.get_left_sneak_key(i),
       pair[1].last_folder .. '/' .. pair[1].filename,
       pair[2] and sneak.get_right_sneak_key(i),
@@ -96,6 +97,7 @@ function M.show_buffers()
   end)
 
   vim.api.nvim_buf_set_lines(window_bufnr, 0, #content, false, content)
+  win_info.lock_content()
 
   keymaps.add_close_keymap(win_id, window_bufnr)
 end
