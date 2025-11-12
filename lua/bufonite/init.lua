@@ -84,9 +84,9 @@ function M.show_buffers()
   local content = { '' }
 
   array.for_each(paired, function(pair, i)
-    keymaps.add_sneak_keymap(win_id, window_bufnr, pair[1].bufnr, sneak.get_left_sneak_key(i))
+    keymaps.add_sneak_keymap(M.config, win_id, window_bufnr, pair[1].bufnr, sneak.get_left_sneak_key(i))
     if pair[2] ~= nil then
-      keymaps.add_sneak_keymap(win_id, window_bufnr, pair[2].bufnr, sneak.get_right_sneak_key(i))
+      keymaps.add_sneak_keymap(M.config, win_id, window_bufnr, pair[2].bufnr, sneak.get_right_sneak_key(i))
     end
 
     printer.add_file_boxes(

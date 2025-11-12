@@ -7,11 +7,12 @@ local close_window = function(win_id)
 end
 
 ---Adds a keymap to go straight to the file using a sneak key
+---@param config Bufonite.Config
 ---@param win_id number
 ---@param window_bufnr number
 ---@param bufnr number
 ---@param sneak_key string
-function M.add_sneak_keymap(win_id, window_bufnr, bufnr, sneak_key)
+function M.add_sneak_keymap(config, win_id, window_bufnr, bufnr, sneak_key)
   vim.api.nvim_buf_set_keymap(window_bufnr, 'n', sneak_key, '', {
     nowait = true,
     noremap = true,
@@ -19,6 +20,30 @@ function M.add_sneak_keymap(win_id, window_bufnr, bufnr, sneak_key)
     callback = function()
       close_window(win_id)
 
+      vim.api.nvim_set_current_buf(bufnr)
+    end,
+  })
+
+  vim.api.nvim_buf_set_keymap(window_bufnr, 'n', config.keymaps.vsplit_prepend .. sneak_key, '', {
+    nowait = true,
+    noremap = true,
+    silent = true,
+    callback = function()
+      close_window(win_id)
+
+      vim.cmd('vsplit')
+      vim.api.nvim_set_current_buf(bufnr)
+    end,
+  })
+
+  vim.api.nvim_buf_set_keymap(window_bufnr, 'n', config.keymaps.split_prepend .. sneak_key, '', {
+    nowait = true,
+    noremap = true,
+    silent = true,
+    callback = function()
+      close_window(win_id)
+
+      vim.cmd('split')
       vim.api.nvim_set_current_buf(bufnr)
     end,
   })
