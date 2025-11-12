@@ -4,6 +4,8 @@ local M = {}
 
 ---@class Bufonite.KeymapsOpts
 ---@field close? string[] keymaps which should close the buffer selection window
+---@field vsplit_prepend? string the key to press before you open a buffer in vsplit
+---@field split_prepend? string the key to press before you open a buffer in split
 
 ---@class Bufonite.Opts
 ---@field is_buffer_selectable? fun(bufnr: number): boolean should this buffer be added to the list?
@@ -14,6 +16,8 @@ local M = {}
 
 ---@class Bufonite.Keymaps
 ---@field close string[] keymaps which should close the buffer selection window
+---@field vsplit_prepend string the key to press before you open a buffer in vsplit
+---@field split_prepend string the key to press before you open a buffer in split
 
 ---@class Bufonite.Config
 ---@field width number
@@ -31,10 +35,12 @@ local defaults = {
       and vim.api.nvim_buf_get_name(bufnr) ~= ''
       and not buffers.is_terminal_buffer(bufnr)
   end,
-  width = 70,
+  width = 50,
   height = 30,
   keymaps = {
     close = { 'q', '<C-[>', '<esc>' },
+    vsplit_prepend = '<C-v>',
+    split_prepend = '<C-h>',
   },
   capacity = 5,
 }
