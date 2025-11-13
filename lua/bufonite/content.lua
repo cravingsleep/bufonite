@@ -37,19 +37,25 @@ local function ws(n) return string.rep(' ', n) end
 ---@param filename_right string
 function M.add_file_boxes(contents, window_width, sneak_key_left, filename_left, sneak_key_right, filename_right)
   if filename_right ~= nil then
-    local middle_space = window_width - 8
-    local max_filename_length = math.floor(middle_space / 2)
-    local truncated_filename_left = truncate_from_start(filename_left, max_filename_length)
-    local truncated_filename_right = truncate_from_start(filename_right, max_filename_length)
+    -- 6 borders and one space and one for niceness
+    local max_filename_length = window_width - 8
+    local truncated_left = truncate_from_start(filename_left, max_filename_length)
+    local truncated_right = truncate_from_start(filename_right, max_filename_length)
 
-    table.insert(contents, top_border .. ws(window_width - (top_border_length * 2)) .. top_border)
+    -- top border of left has nothing on right
+    table.insert(contents, top_border)
 
-    local left_middle = get_middle(sneak_key_left) .. ' ' .. truncated_filename_left
-    local right_middle = truncated_filename_right .. ' ' .. get_middle(sneak_key_right)
+    local left_middle = get_middle(sneak_key_left) .. ' ' .. truncated_left
+    local left_middle_length = 4 + #truncated_left
+    local right_middle = truncated_right .. ' ' .. get_middle(sneak_key_right)
+    local right_middle_length = 4 + #truncated_right
 
-    -- get rid of the 8 extra bytes by the unicode line length
-    table.insert(contents, left_middle .. ws(window_width - (#right_middle + #left_middle - 8)) .. right_middle)
-    table.insert(contents, bottom_border .. ws(window_width - (bottom_border_length * 2)) .. bottom_border)
+    table.insert(contents, left_middle .. ws(window_width - left_middle_length - top_border_length) .. top_border)
+    table.insert(
+      contents,
+      bottom_border .. ws(window_width - bottom_border_length - right_middle_length) .. right_middle
+    )
+    table.insert(contents, ws(window_width - bottom_border_length) .. bottom_border)
   else
     local max_space = window_width - 4
     table.insert(contents, top_border)

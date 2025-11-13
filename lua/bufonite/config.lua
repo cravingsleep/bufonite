@@ -13,6 +13,7 @@ local M = {}
 ---@field height? number
 ---@field keymaps? Bufonite.KeymapsOpts
 ---@field capacity? number
+---@field folders_shown? number
 
 ---@class Bufonite.Keymaps
 ---@field close string[] keymaps which should close the buffer selection window
@@ -25,6 +26,7 @@ local M = {}
 ---@field is_buffer_selectable fun(bufnr: number): boolean should this buffer be added to the list?
 ---@field keymaps Bufonite.Keymaps
 ---@field capacity number
+---@field folders_shown number
 
 ---@type Bufonite.Config
 local defaults = {
@@ -35,7 +37,7 @@ local defaults = {
       and vim.api.nvim_buf_get_name(bufnr) ~= ''
       and not buffers.is_terminal_buffer(bufnr)
   end,
-  width = 50,
+  width = 70,
   height = 30,
   keymaps = {
     close = { 'q', '<C-[>', '<esc>' },
@@ -43,6 +45,7 @@ local defaults = {
     split_prepend = '<C-h>',
   },
   capacity = 5,
+  folders_shown = 2,
 }
 
 ---@param opts? Bufonite.Opts
