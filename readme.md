@@ -67,6 +67,7 @@ local defaults = {
 ```
 
 |field|description|
+|-----|-----------|
 |is_buffer_selectable|decide whether to add the buffer to the lru|
 |width|width of the buffer selector window|
 |height|height of the buffer selector window|
