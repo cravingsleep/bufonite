@@ -78,7 +78,7 @@ local defaults = {
 
 ## Lualine Integration
 
-You can show the alternate buffer in Lualine name using:
+You can show the alternate buffer name in Lualine using:
 ```lua
 function() return require('bufonite').lualine_altbuffer() end,
 ```
