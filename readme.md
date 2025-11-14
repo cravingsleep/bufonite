@@ -75,3 +75,16 @@ local defaults = {
 |keymaps.split_prepend|what key to press before the sneak key to horizontal split|
 |capacity|the max amount of buffers to store in the lru|
 |folders_shown|how many folders to show before the buffer filename|
+
+## Lualine Integration
+
+You can show the alternate buffer in Lualine name using:
+```lua
+function() return require('bufonite').lualine_altbuffer() end,
+```
+
+It has the options:
+|field|description|default|
+|-----|-----------|-------|
+|folders_shown|how many folders to show before the filename|0|
+|prefix_icon|what icon to show before the text|⇄| 
