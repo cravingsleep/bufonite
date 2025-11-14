@@ -105,4 +105,22 @@ function M.show_buffers()
   keymaps.add_close_keymap(win_id, window_bufnr, M.config.keymaps.close)
 end
 
+---@alias LuaLineAltBufferOpts {folders_shown?:number, prefix_icon?:string}
+---A Lualine plugin to show the Bufoite alt buffer name
+---@param opts LuaLineAltBufferOpts?
+function M.lualine_altbuffer(opts)
+  local folders_shown = (opts or {}).folders_shown or 0
+  local prefix_icon = (opts or {}).prefix_icon or '⇄'
+
+  local alt_bufnr = M.get_alt_buffernr()
+  if alt_bufnr == nil then
+    return ''
+  end
+
+  local fullpath = vim.api.nvim_buf_get_name(alt_bufnr)
+  local filename = buffers.last_n_folders(fullpath, folders_shown)
+
+  return prefix_icon .. ' ' .. filename
+end
+
 return M
