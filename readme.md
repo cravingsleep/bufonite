@@ -1,8 +1,8 @@
 # Bufonite
 
-![A visual look at the Bufonite selector](https://github.com/user-attachments/assets/71248ac7-fabb-4b75-a17b-6562dbbadb34)
-
 A Neovim plugin that simplifies buffer navigation and provides a better experience for alternate buffers.
+
+![A visual look at the Bufonite selector](https://github.com/user-attachments/assets/71248ac7-fabb-4b75-a17b-6562dbbadb34)
 
 ## Brief
 
