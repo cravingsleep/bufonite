@@ -9,14 +9,6 @@ function M.get_buffer_info(bufnr)
   return { bufnr = bufnr, current_path = current_path }
 end
 
----@param bufnr number
----@return boolean
-function M.is_terminal_buffer(bufnr)
-  local buffer_name = vim.api.nvim_buf_get_name(bufnr)
-
-  return string.sub(buffer_name, 1, string.len('term://')) == 'term://'
-end
-
 ---@param path string
 ---@param n number
 ---@return string

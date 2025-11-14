@@ -52,7 +52,6 @@ local defaults = {
       and vim.bo[bufnr].buflisted
       and vim.bo[bufnr].buftype == ''
       and vim.api.nvim_buf_get_name(bufnr) ~= ''
-      and not buffers.is_terminal_buffer(bufnr)
   end,
   width = 70,
   height = 30,
