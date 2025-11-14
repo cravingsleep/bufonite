@@ -88,3 +88,6 @@ It has the options:
 |-----|-----------|-------|
 |folders_shown|how many folders to show before the filename|0|
 |prefix_icon|what icon to show before the text|⇄| 
+
+You can also use `get_buffer_count` if you need to know how many buffers
+are in the LRU.
