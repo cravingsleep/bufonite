@@ -93,9 +93,9 @@ function M.show_buffers()
       content,
       M.config.width,
       sneak.get_left_sneak_key(i),
-      pair[1].last_folder .. '/' .. pair[1].filename,
+      buffers.last_n_folders(pair[1].current_path, M.config.folders_shown),
       pair[2] and sneak.get_right_sneak_key(i),
-      pair[2] and pair[2].last_folder .. '/' .. pair[2].filename
+      pair[2] and buffers.last_n_folders(pair[2].current_path, M.config.folders_shown)
     )
   end)
 

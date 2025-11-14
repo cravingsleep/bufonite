@@ -128,24 +128,4 @@ function LRU:at(index)
   return node.value
 end
 
--- function LRU:debug_print()
---   local content = {}
---
---   local node = self.head
---   while node ~= nil do
---     if node.type == Type.HEAD then
---       table.insert(content, 'H')
---     elseif node.type == Type.TAIL then
---       table.insert(content, 'T')
---     else
---       table.insert(content, node.value)
---     end
---
---     node = node.next
---   end
---
---   print(table.concat(content, ' -> '))
--- end
---
-
 return LRU
