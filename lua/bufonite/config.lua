@@ -14,7 +14,6 @@ local defaults = {
       and vim.bo[bufnr].buftype == ''
       and vim.api.nvim_buf_get_name(bufnr) ~= ''
   end,
-  folders_shown = 2,
 }
 
 ---@param opts? Bufonite.Opts
