@@ -5,8 +5,8 @@ A Neovim plugin that simplifies alt buffer navigation to be more intuitive and r
 ## Brief
 
 Bufonite offers a different, perhaps more intuitive approach to the alternate buffer. Since deleted buffers are removed from
-its LRU the alternate buffer will always be the most recently used buffer that is still open. This differs from base Vim which will
-despite deleting the buffer will still keep it as the alternate.
+its LRU the alternate buffer will always be the most recently used buffer that is still open. This differs from base Vim where
+the alternate buffer can be one that has been deleted.
 
 ## Installation
 
