@@ -1,10 +1,6 @@
 local config = require('bufonite.config')
 local array = require('bufonite.array')
-local ui = require('bufonite.ui')
 local buffers = require('bufonite.buffers')
-local sneak = require('bufonite.sneak')
-local keymaps = require('bufonite.keymaps')
-local printer = require('bufonite.content')
 local LRU = require('bufonite.lru')
 
 local M = {}
@@ -16,7 +12,7 @@ local buffer_lru
 function M.setup(opts)
   M.config = config.get_config(opts)
 
-  buffer_lru = LRU.new(M.config.capacity)
+  buffer_lru = LRU.new()
 
   -- get the list of initial buffers (i.e. from cmd line) and load them in to our lru
   -- add them in reverse since the first file in the cmd line will be the open one which
@@ -63,47 +59,6 @@ function M.get_alt_buffernr() return buffer_lru:at(2) end
 ---Gets the amount of buffers currently open
 ---@return number
 function M.get_buffer_count() return buffer_lru.length end
-
----Show the Bufonite buffer selector
-function M.show_buffers()
-  local current_bufnr = vim.api.nvim_get_current_buf()
-  local selectable_bufnrs = array.filter(buffer_lru:toarray(), function(bufnr) return bufnr ~= current_bufnr end)
-  if #selectable_bufnrs == 0 then
-    vim.notify('Bufonite: no buffers to show...')
-    return
-  end
-
-  local win_info = ui.create_window(M.config.width, M.config.height)
-  local win_id = win_info.win_id
-  local window_bufnr = win_info.bufnr
-
-  local buffer_infos = array.map(selectable_bufnrs, function(bufnr) return buffers.get_buffer_info(bufnr) end)
-
-  local paired = array.zip(buffer_infos, 2)
-  -- put a empty line first so the cursor is not on the first box which looks jarring
-  local content = { '' }
-
-  array.for_each(paired, function(pair, i)
-    keymaps.add_sneak_keymap(M.config, win_id, window_bufnr, pair[1].bufnr, sneak.get_left_sneak_key(i))
-    if pair[2] ~= nil then
-      keymaps.add_sneak_keymap(M.config, win_id, window_bufnr, pair[2].bufnr, sneak.get_right_sneak_key(i))
-    end
-
-    printer.add_file_boxes(
-      content,
-      M.config.width,
-      sneak.get_left_sneak_key(i),
-      buffers.last_n_folders(pair[1].current_path, M.config.folders_shown),
-      pair[2] and sneak.get_right_sneak_key(i),
-      pair[2] and buffers.last_n_folders(pair[2].current_path, M.config.folders_shown)
-    )
-  end)
-
-  vim.api.nvim_buf_set_lines(window_bufnr, 0, #content, false, content)
-  win_info.lock_content()
-
-  keymaps.add_close_keymap(win_id, window_bufnr, M.config.keymaps.close)
-end
 
 ---@alias LuaLineAltBufferOpts {folders_shown?:number, prefix_icon?:string}
 ---A Lualine plugin to show the Bufoite alt buffer name

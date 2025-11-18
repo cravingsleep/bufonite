@@ -60,7 +60,6 @@ local defaults = {
     vsplit_prepend = '<C-v>',
     split_prepend = '<C-h>',
   },
-  capacity = 5,
   folders_shown = 2,
 }
 ```
@@ -73,7 +72,6 @@ local defaults = {
 |keymaps.close|what keys close the buffer selector window|
 |keymaps.vsplit_prepend|what key to press before the sneak key to vertical split|
 |keymaps.split_prepend|what key to press before the sneak key to horizontal split|
-|capacity|the max amount of buffers to store in the lru|
 |folders_shown|how many folders to show before the buffer filename|
 
 ## Lualine Integration
