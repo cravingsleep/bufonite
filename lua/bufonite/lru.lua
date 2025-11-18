@@ -8,7 +8,6 @@
 ---@field value any|nil the value stored in the node
 
 ---@class LRU
----@field capacity number
 ---@field head LRU.Node
 ---@field tail LRU.Node
 ---@field node_cache table<any, LRU.Node>
@@ -17,12 +16,9 @@ local LRU = {}
 LRU.__index = LRU
 
 ---creates an empty list
----@param capacity number the max items that can be stored in the list
 ---@return LRU
-function LRU.new(capacity)
+function LRU.new()
   local self = setmetatable({}, { __index = LRU })
-
-  self.capacity = capacity
 
   -- it is a lot easier to keep a constant head and tail
   -- when it comes to the methods so store them here
@@ -66,17 +62,11 @@ end
 
 ---add a value to the list, making it the most recently used
 ---if the item already exists it moves to the first position
----if we are at capacity evict the least recently used (last)
 ---@param value any
 function LRU:add(value)
   local cached_node = self.node_cache[value]
 
   if cached_node == nil then
-    -- if we are at capacity then evit the last node
-    if self.length == self.capacity then
-      self:_detach_node(self.tail.prev)
-    end
-
     -- add this as head
     self:_put_into_head({ value = value })
   else
