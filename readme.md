@@ -8,6 +8,11 @@ Bufonite offers a different, perhaps more intuitive approach to the alternate bu
 its LRU the alternate buffer will always be the most recently used buffer that is still open. This differs from base Vim where
 the alternate buffer can be one that has been deleted.
 
+The buffers in the LRU can also be viewed with the use of [telescope](https://github.com/nvim-telescope/telescope.nvim) and will
+automatically be ordered with the most recently used first.
+
+The alternate buffer name and total buffer count can also be used in Lualine.
+
 ## Installation
 
 Using setup:
@@ -15,19 +20,25 @@ Using setup:
 local bufonite = require('bufonite');
 
 bufonite.setup {}
+-- if you want the telescope extension
+-- require('telescope').load_extension('bufonite')
 
 vim.keymap.set('n', '<Tab>', function() bufonite.switch_to_alt() end)
+-- vim.keymap.set('n', '<cmd>Telescope bufonite<cr>')
 ```
 
 with lazy:
 ```lua
 return {
   'cravingsleep/bufonite',
-  dependencies = { 'nvim-lua/plenary.nvim' },
-  lazy = false,
-  opts = {},
+  config = function()
+    require('bufonite').setup({})
+    -- if you want the telescope extension
+    -- require('telescope').load_extension('bufonite')
+  end,
   keys = {
     { '<Tab>', function() require('bufonite').switch_to_alt() end },
+    -- { '<C-e>', '<cmd>Telescope bufonite<cr>' },
   },
 }
 ```
