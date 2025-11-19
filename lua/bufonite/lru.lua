@@ -86,12 +86,18 @@ function LRU:delete(value)
   end
 end
 
----converts the linked list into an array
+---gets all but the mru and converts to an array
 ---@return any[]
-function LRU:toarray()
+function LRU:all_but_mru()
   local arr = {}
 
+  -- skip the first node
   local node = self.head.next
+  if node == nil then
+    return arr
+  end
+
+  node = node.next
 
   while node ~= nil and node ~= self.tail do
     table.insert(arr, node.value)
