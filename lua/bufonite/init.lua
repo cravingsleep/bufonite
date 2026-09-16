@@ -60,12 +60,11 @@ function M.get_alt_buffernr() return buffer_lru:at(2) end
 ---@return number
 function M.get_buffer_count() return buffer_lru.length end
 
----@alias LuaLineAltBufferOpts {folders_shown?:number, prefix_icon?:string}
+---@alias LuaLineAltBufferOpts {folders_shown?:number}
 ---A Lualine plugin to show the Bufoite alt buffer name
 ---@param opts LuaLineAltBufferOpts?
 function M.lualine_altbuffer(opts)
   local folders_shown = (opts or {}).folders_shown or 0
-  local prefix_icon = (opts or {}).prefix_icon or '⇄'
 
   local alt_bufnr = M.get_alt_buffernr()
   if alt_bufnr == nil then
@@ -75,7 +74,7 @@ function M.lualine_altbuffer(opts)
   local fullpath = vim.api.nvim_buf_get_name(alt_bufnr)
   local filename = buffers.last_n_folders(fullpath, folders_shown)
 
-  return prefix_icon .. ' ' .. filename
+  return filename
 end
 
 return M
